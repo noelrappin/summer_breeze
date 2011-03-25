@@ -1,3 +1,7 @@
+require 'summer_breeze/define'
+require 'summer_breeze/container'
+require 'summer_breeze/fixture'
+
 module SummerBreeze
   module Rails
     class Railtie < ::Rails::Railtie
