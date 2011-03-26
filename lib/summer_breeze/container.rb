@@ -14,11 +14,11 @@ module SummerBreeze
       
     end
     
-    attr_accessor :initializers, :fixtures
+    attr_accessor :initializers, :controllers
     
     def initialize
       @initializers = {}
-      @fixtures = []
+      @controllers = []
       SummerBreeze::Container.add_container(self)
     end
     
@@ -26,13 +26,12 @@ module SummerBreeze
       initializers[symbol] = block
     end
     
-    def fixture(name, &block)
-      fixture = SummerBreeze::Fixture.new(name, self, &block)
-      fixtures << fixture
+    def controller(klass, &block)
+      controllers << SummerBreeze::Controller.new(klass, self, &block)
     end
     
     def run
-      fixtures.each { |fixture| fixture.run }
+      controllers.each { |controller| controller.run }
     end
     
   end

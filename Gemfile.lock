@@ -15,6 +15,7 @@ GEM
       git (>= 1.2.5)
       rake
     json_pure (1.5.1)
+    nokogiri (1.4.4)
     rack (1.2.2)
     rake (0.8.7)
     rcov (0.9.9)
@@ -37,5 +38,6 @@ DEPENDENCIES
   bundler
   jasmine
   jeweler
+  nokogiri
   rcov
   rspec
