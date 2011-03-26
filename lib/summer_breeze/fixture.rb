@@ -41,7 +41,7 @@ module SummerBreeze
       if initializer.is_a?(Symbol)
         proc = controller.container.initializers[initializer]
       end
-      instance_eval(&proc) if proc #note, should the actual run have it's own context?
+      controller.instance_eval(&proc) if proc #note, should the actual run have it's own context?
     end
     
     def call_controller
