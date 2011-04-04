@@ -1,8 +1,13 @@
 module SummerBreeze
   class Controller
     extend SummerBreeze::BeforeAndAfter
-    include ActionController::TestCase::Behavior
-    include Devise::TestHelpers
+    include ::ActionController::TestCase::Behavior
+    
+    begin
+      include Devise::TestHelpers
+    rescue
+      nil
+    end
     
     attr_accessor :fixtures, :klass, :container, :controller
     
@@ -12,8 +17,13 @@ module SummerBreeze
       @fixtures = []
       @controller = klass.new
       @routes = ::Rails.application.routes
-      instance_eval(&block)
+      instance_eval(&block) if block
       self
+    end
+    
+    def self.teardown_subscriptions
+      ActiveSupport::Notifications.unsubscribe("render_template.action_view")
+      ActiveSupport::Notifications.unsubscribe("!render_template.action_view")
     end
     
     def fixture(name, &block)

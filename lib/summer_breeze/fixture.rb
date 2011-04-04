@@ -2,7 +2,7 @@ module SummerBreeze
   class Fixture
     extend SummerBreeze::BeforeAndAfter
     
-    attr_accessor :name, :controller, :initializer, :controller_class, :action, 
+    attr_accessor :name, :controller, :initializers, :controller_class, :action, 
         :method, :limit_to_selector, :params, :session, :flash
         
 
@@ -13,6 +13,7 @@ module SummerBreeze
       @session = {}
       @flash = {}
       @method = "GET"
+      @initializers = []
       instance_eval(&initialize_block) if block_given?
       parse_name
       self
@@ -24,24 +25,35 @@ module SummerBreeze
     end
     
     def initialize_with(symbol_or_proc)
-      self.initializer = symbol_or_proc
+      self.initializers << symbol_or_proc
     end
     
     [:controller_class, :action, :method, :limit_to_selector, :params, :session, :flash].each do |sym|
-      define_method(sym) do |new_value = :no_op|
+      define_method(sym) do |new_value = :no_op, &block|
         unless new_value == :no_op
           send(:"#{sym}=", new_value)
         end
-        instance_variable_get("@#{sym}")
+        if new_value == :no_op && block.present?
+          send(:"#{sym}=", block)
+        end
+        result = instance_variable_get("@#{sym}")
+        if result.is_a?(Proc)
+          return result.call
+        else
+          return result
+        end
       end
     end
     
-    def run_initializer
-      proc = initializer
-      if initializer.is_a?(Symbol)
-        proc = controller.container.initializers[initializer]
+    def run_initializers
+      initializers.each do |initializer|
+        proc = initializer
+        if initializer.is_a?(Symbol)
+          proc = controller.container.initializers[initializer]
+        end
+        #note, should the actual run have it's own context?
+        controller.instance_eval(&proc) if proc
       end
-      controller.instance_eval(&proc) if proc #note, should the actual run have it's own context?
     end
     
     def call_controller
@@ -51,13 +63,11 @@ module SummerBreeze
     def run
       Controller.run_befores(self.controller)
       Fixture.run_befores(self)
-      run_initializer
+      run_initializers
       call_controller
       save_response
-    # ensure
-    #       p $1
-    #       Fixture.run_afters(self)
-    #       Controller.run_afters(self.controller)
+      Fixture.run_afters(self)
+      Controller.run_afters(self.controller)
     end
     
     def fixture_path

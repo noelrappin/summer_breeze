@@ -7,6 +7,7 @@ source "http://rubygems.org"
 # Include everything needed to run rake, tests, features, etc.
 gem "jasmine"
 gem "nokogiri"
+gem "rails" 
 
 group :development do
   gem "rspec"
