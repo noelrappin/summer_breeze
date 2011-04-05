@@ -56,6 +56,15 @@ module SummerBreeze
       
     end
 
+    describe "running and such" do
+      
+      let(:fixture) { Fixture.new("fixture", nil) }
+      
+      it "describes the output path" do
+        fixture.fixture_path.should == ""
+      end
+      
+    end
     
     # def run_initializers
     #   initializers.each do |initializer|
