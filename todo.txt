@@ -3,3 +3,4 @@
 # test
 # empty directory before running Rails task
 # better integration with devise
+# Fix stuff
