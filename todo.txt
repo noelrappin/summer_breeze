@@ -2,3 +2,4 @@
 # improve DSL for block arguments
 # test
 # empty directory before running Rails task
+# better integration with devise
