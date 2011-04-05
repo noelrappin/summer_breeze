@@ -16,8 +16,18 @@ end
 class DummyController
 end
 
+class DummyConfig
+  def root
+    ''
+  end
+end
+
 class DummyApplication
   def routes
+  end
+  
+  def config
+    DummyConfig.new
   end
 end
 

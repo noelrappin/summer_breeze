@@ -38,9 +38,11 @@ module SummerBreeze
       define_method(sym) do |new_value = :no_op, &block|
         unless new_value == :no_op
           send(:"#{sym}=", new_value)
+          return 
         end
         if new_value == :no_op && block.present?
           send(:"#{sym}=", block)
+          return 
         end
         result = instance_variable_get("@#{sym}")
         if result.is_a?(Proc)
@@ -115,7 +117,11 @@ module SummerBreeze
     def scrubbed_response
       result = html_document
       result = remove_third_party_scripts(result)
-      result = result.css(limit_to_selector).first.to_s
+      if limit_to_selector.present?
+        result = result.css(limit_to_selector).first.to_s 
+      else
+        result = result.to_s
+      end
       convert_body_tag_to_div(result)
     end
 

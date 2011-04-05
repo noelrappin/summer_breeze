@@ -61,7 +61,8 @@ module SummerBreeze
       let(:fixture) { Fixture.new("fixture", nil) }
       
       it "describes the output path" do
-        fixture.fixture_path.should == ""
+        fixture.fixture_path.should == "/tmp/summer_breeze"
+        fixture.fixture_file.should == "/tmp/summer_breeze/fixture.html"
       end
       
     end
@@ -90,16 +91,6 @@ module SummerBreeze
     #   save_response
     #   Fixture.run_afters(self)
     #   Controller.run_afters(self.controller)
-    # end
-    # 
-    # def fixture_path
-    #   path = File.join(::Rails.root, 'tmp', 'summer_breeze')
-    #   Dir.mkdir(path) unless File.exists?(path)
-    #   path
-    # end
-    # 
-    # def fixture_file
-    #   File.join(fixture_path, "#{name}.html")
     # end
     # 
     # def html_document
