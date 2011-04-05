@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Noel Rappin"]
-  s.date = %q{2011-03-24}
+  s.date = %q{2011-04-05}
   s.description = %q{Creates dynamic rails fixtures for Jasmine tests}
   s.email = %q{noelrappin@gmail.com}
   s.extra_rdoc_files = [
@@ -26,11 +26,20 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "lib/summer_breeze.rb",
+    "lib/summer_breeze/before_and_after.rb",
+    "lib/summer_breeze/container.rb",
+    "lib/summer_breeze/controller.rb",
+    "lib/summer_breeze/define.rb",
+    "lib/summer_breeze/fixture.rb",
     "lib/summer_breeze/rails.rb",
     "lib/summer_breeze/tasks/summer_breeze.rake",
     "spec/spec_helper.rb",
+    "spec/summer_breeze/container_spec.rb",
+    "spec/summer_breeze/controller_spec.rb",
+    "spec/summer_breeze/fixture_spec.rb",
     "spec/summer_breeze_spec.rb",
-    "summer_breeze.gemspec"
+    "summer_breeze.gemspec",
+    "todo.txt"
   ]
   s.homepage = %q{http://github.com/noelrappin/summer_breeze}
   s.licenses = ["MIT"]
@@ -39,6 +48,9 @@ Gem::Specification.new do |s|
   s.summary = %q{Creates dynamic rails fixtures for Jasmine tests}
   s.test_files = [
     "spec/spec_helper.rb",
+    "spec/summer_breeze/container_spec.rb",
+    "spec/summer_breeze/controller_spec.rb",
+    "spec/summer_breeze/fixture_spec.rb",
     "spec/summer_breeze_spec.rb"
   ]
 
@@ -47,12 +59,16 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<jasmine>, [">= 0"])
+      s.add_runtime_dependency(%q<nokogiri>, [">= 0"])
+      s.add_runtime_dependency(%q<rails>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
     else
       s.add_dependency(%q<jasmine>, [">= 0"])
+      s.add_dependency(%q<nokogiri>, [">= 0"])
+      s.add_dependency(%q<rails>, [">= 0"])
       s.add_dependency(%q<rspec>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
@@ -60,6 +76,8 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<jasmine>, [">= 0"])
+    s.add_dependency(%q<nokogiri>, [">= 0"])
+    s.add_dependency(%q<rails>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
