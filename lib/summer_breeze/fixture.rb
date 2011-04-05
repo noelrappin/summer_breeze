@@ -21,7 +21,13 @@ module SummerBreeze
     
     def parse_name
       return if action.present?
-      self.action, self.limit_to_selector = name.split(/\.|#/)
+      result = name.match(/(.*)((\.|#).*)/)
+      if result
+        self.action = result[1] 
+        self.limit_to_selector = result[2]
+      else
+        self.action = name
+      end
     end
     
     def initialize_with(symbol_or_proc)
@@ -61,6 +67,7 @@ module SummerBreeze
     end
     
     def run
+      controller.reset
       Controller.run_befores(self.controller)
       Fixture.run_befores(self)
       run_initializers
@@ -108,7 +115,7 @@ module SummerBreeze
     def scrubbed_response
       result = html_document
       result = remove_third_party_scripts(result)
-      result = result.css(".#{limit_to_selector}").first.to_s
+      result = result.css(limit_to_selector).first.to_s
       convert_body_tag_to_div(result)
     end
 

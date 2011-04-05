@@ -26,6 +26,10 @@ module SummerBreeze
       ActiveSupport::Notifications.unsubscribe("!render_template.action_view")
     end
     
+    def reset
+      @controller = klass.new
+    end
+    
     def fixture(name, &block)
       fixtures << SummerBreeze::Fixture.new(name, self, &block)
     end
