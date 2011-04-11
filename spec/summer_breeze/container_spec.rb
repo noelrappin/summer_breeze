@@ -20,6 +20,16 @@ module SummerBreeze
       container.controllers[0].is_a?(SummerBreeze::Controller).should be_true
     end
     
+    it "can add a fixture" do
+      container.fixture("DummyController##index.pagination_container")
+      container.controllers.size.should == 1
+      controller = container.controllers.first
+      controller.klass.should == DummyController
+      controller.fixtures.size.should == 1
+      fixture = controller.fixtures.first
+      fixture.action.should == "index"
+      fixture.limit_to_selector.should == ".pagination_container"
+    end
   end
   
 end

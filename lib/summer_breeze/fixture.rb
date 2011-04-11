@@ -3,11 +3,12 @@ module SummerBreeze
     extend SummerBreeze::BeforeAndAfter
     
     attr_accessor :name, :controller, :initializers, :controller_class, :action, 
-        :method, :limit_to_selector, :params, :session, :flash
+        :method, :limit_to_selector, :params, :session, :flash, :filename
         
 
     def initialize(name, controller, &initialize_block)
       @name = name
+      @filename = name
       @controller = controller
       @params = {}
       @session = {}
@@ -34,7 +35,7 @@ module SummerBreeze
       self.initializers << symbol_or_proc
     end
     
-    [:controller_class, :action, :method, :limit_to_selector, :params, :session, :flash].each do |sym|
+    [:controller_class, :action, :method, :limit_to_selector, :params, :session, :flash, :filename].each do |sym|
       define_method(sym) do |new_value = :no_op, &block|
         unless new_value == :no_op
           send(:"#{sym}=", new_value)
@@ -86,7 +87,7 @@ module SummerBreeze
     end
     
     def fixture_file
-      File.join(fixture_path, "#{name}.html")
+      File.join(fixture_path, "#{filename}.html")
     end
     
     def html_document

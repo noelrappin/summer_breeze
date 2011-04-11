@@ -34,5 +34,12 @@ module SummerBreeze
       controllers.each { |controller| controller.run }
     end
     
+    def fixture(name, &block)
+      controller_name, fixture_name = name.split("##")
+      controller = SummerBreeze::Controller.new(controller_name.constantize, self)
+      controller.fixture(fixture_name, &block)
+      controllers << controller
+    end
+    
   end
 end
