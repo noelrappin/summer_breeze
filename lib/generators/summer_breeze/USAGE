@@ -1,0 +1,9 @@
+Description:
+    Explain the generator
+
+Example:
+    rails generate summer_breeze:install 
+
+    This will create:
+        - spec/javascripts/helpers/summer_breeze.js
+        - spec/javascripts/support/summer_breeze.rb
