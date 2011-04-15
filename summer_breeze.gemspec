@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Noel Rappin"]
-  s.date = %q{2011-04-05}
+  s.date = %q{2011-04-15}
   s.description = %q{Creates dynamic rails fixtures for Jasmine tests}
   s.email = %q{noelrappin@gmail.com}
   s.extra_rdoc_files = [
@@ -25,6 +25,10 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "lib/generators/summer_breeze/USAGE",
+    "lib/generators/summer_breeze/install_generator.rb",
+    "lib/generators/summer_breeze/templates/summer_breeze.js",
+    "lib/generators/summer_breeze/templates/summer_breeze.rb",
     "lib/summer_breeze.rb",
     "lib/summer_breeze/before_and_after.rb",
     "lib/summer_breeze/container.rb",

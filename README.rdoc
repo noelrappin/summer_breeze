@@ -1,6 +1,99 @@
 = summer_breeze
 
-Description goes here.
+Summer Breeze is a tool for generating fixture DOM output for Jasmine JavaScript tests directly from your Rails Views with a simple DSL for specifying fixtures
+
+Summer Breeze is based on work by JB Steadman and Jonathan Barnes that can be found at http://pivotallabs.com/users/jb/blog/articles/1152-javascripttests-bind-reality-
+
+Please note that Summer Breeze is an early release, with limitations, and will likely change over time.
+
+== Why Use Summer Breeze?
+
+Jasmine is a great tool for BDD testing of JavaScript. When testing the JavaScript front end of a Rails project, often the JavaScript functionality will depend on a specific DOM structure being present on the page. Ideally, your Jasmine tests would be written in such a way that if the page view changed, the JavaScript test would fail. 
+
+So, Summer Breeze provides an easy way to have your Rails views be generated on the fly and used as input to Jasmine tests
+
+== Installing Summer Breeze
+
+Summer Breeze requires Rails 3 and Ruby 1.9. (1.8 support is a future possibility, Rails 2 is less likely.) Jasmine must be installed, and right now there's a dependency on Devise for authentication.
+
+To install include in your gem file
+
+    gem summer_breeze
+    
+After the bundle is installed, use
+
+    rails generate summer_breeze:install
+    
+This creates two files, spec/javascripts/helpers/summer_breeze.js which contains JavaScript utilities, and spec/javascripts/support/summer_breeze.rb which is where you put your Summer Breeze fixture definitions.
+
+== Defining Fixtures Summer Breeze
+
+Summer Breeze fixtures are defined in the summer_breeze.rb file. The easiest way is with the fixture command
+
+    fixture "PostsController##index.body_container"
+
+The syntax is the controller name, followed by a ##, followed by the controller action, followed by an optional DOM element. If the element is specified, then only markup inside (and including) that element is saved in the fixture. This allows you to limit your fixture to only the part of the page you care about. If there is no DOM element (delimited by either a '.' or a '#'), then the entire body of the page is saved. In any case, at the moment, any markup inside a DOM element called #third-party-scripts is automatically discarded.
+
+Additional options to the fixture can go in an optional block
+
+    fixture "PostsController##index.body_container" do
+      params(:id => 1)
+    end
+    
+These options can take a simple value, evaluated when the Summer Breeze file is loaded, or a block, evaluated when the fixture is run    
+    
+These options include:
+
+* action -- The controller action, overrides anything that might come from parsing the string argument to fixture.
+* controller_class -- The controller class, also overriding anything that might come from parsing the string. 
+* filename -- the name to save the fixture to, otherwise defaults to the action and DOM id
+* flash -- a hash of values in the flash, as in a controller test
+* limit_to_selector -- the DOM element to limit output, overriding the parsing of the argument string
+* method -- HTTP method of the action to take
+* params -- A hash of parameters sent to the controller
+* session -- A hash of session values sent to the controller, as in a controller test
+
+You often need to do some setup, such as creating a logged-in user, before running the fixture. These setups can be defined with initialize blocks
+
+    initializer :create_user do
+      @user = User.new
+      controller.sign_in(@user)
+    end
+    
+    fixture "PostsController##index.body_container" do
+      initializer :create_user
+    end
+
+The argument to initializer within the fixture block is either a symbol referring to an already defined initializer block, or a block or lambda in it's own right.
+
+Fixture files are stored in Rails.root/tmp/summer_breeze
+
+== Using Summer Breeze in Jasmine tests
+
+Summer Breeze provides a few methods for loading the fixture file:
+
+    sb.loadFixture(fixture_name)
+    sb.findSelector(fixture_name, selector)
+    sb.readFixture(fixture_name)
+
+The loadFixture method reads the matching fixture file and adds it to the Jasmine DOM for further use. The findSelector method does the same, but also returns the the matching selector as a jQuery object. Finally, readFixture returns the HTML text of the fixture without adding it to the Jasmine DOM.
+
+A sample test might look like this. Note that the jasmine-jquery extensions are very helpful in writing these tests
+
+    it("hides text when asked", function() {
+      $form_container = sb.findSelector('login', '.form_container');
+      toggle_handlers.init();
+      $hide_link = $form_container.find(".toggle_link");
+      expect($hide_link).not.toHaveClass("hidden");
+      $hide_link.click();
+      expect($hide_link).toHaveClass("hidden");
+    });
+
+== Summer Breeze Limitations
+
+There are two limitations to these fixtures based on how they load data. The main one has to do with event handlers. Any handlers that are loaded as part of the header script on the page, such as application.js in a typical Rails application, will not be applied to the fixture markup even if the JavaScript file is loaded as part of Jasmine's setup. This is because Jasmine loads those files first before the markup fixture is loaded. Any handlers or such like that you want referred to in the test must either be part of the fixture markup, or the handlers must be explicitly loaded as part of the test, as in the above test, where you can imagine that toggle_handlers.init() is defined elsewhere in the code.
+
+Similarly, stylesheets are not attached to the fixture, so any outcome which depends on style elements defined in the stylesheet will not work.
 
 == Contributing to summer_breeze
  
