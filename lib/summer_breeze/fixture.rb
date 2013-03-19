@@ -1,3 +1,5 @@
+require 'nokogiri'
+
 module SummerBreeze
   class Fixture
     extend SummerBreeze::BeforeAndAfter
